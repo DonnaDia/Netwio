@@ -1,0 +1,87 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>NETWIO</title>
+
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.4/css/bootstrap.min.css"
+          rel="stylesheet" media="screen"/>
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}"/>
+
+</head>
+<body>
+
+<!-- navbar -->
+<nav class="navbar navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{% url 'netwio:home' %}">Netwio APP </a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse navbar-right">
+            <!-- show registration only if user is not yet authenticated -->
+            {% if not user.is_authenticated %}
+                <ul class="nav navbar-nav ">
+                    <li class="active"><a href="{% url 'register' %}">Sign up</a></li>
+                </ul>
+            {% endif %}
+            <!-- show login only if user is not yet authenticated -->
+            {% if not user.is_authenticated %}
+                <ul class="nav navbar-nav ">
+                    <li class="active"><a href="{% url 'login' %}">Login</a></li>
+                </ul>
+            {% endif %}
+            <!-- show My Newsletter only if user is authenticated -->
+            {% if user.is_authenticated %}
+                <ul class="nav navbar-nav ">
+                    <li class="active"><a href="{% url 'netwio:user_posts' user.username %}">My Newsletter</a></li>
+                </ul>
+            {% endif %}
+            <!-- show new post only if user is authenticated -->
+            {% if user.is_authenticated %}
+                <ul class="nav navbar-nav ">
+                    <li class="active"><a href="{% url 'netwio:create_post' %}">New Post</a></li>
+                </ul>
+            {% endif %}
+            <!-- show sign out only if user is authenticated -->
+            {% if user.is_authenticated %}
+                <ul class="nav navbar-nav ">
+                    <li class="active"><a href="{% url 'logout' %}">Sign Out</a></li>
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<div id="content">
+    {% block content %}{% endblock %}
+</div>
+
+<hr>
+
+<!-- footer -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+
+            <!-- Logged user info -->
+            {% if user.is_authenticated %}
+                <p class="text-center">
+                    | Logged user: {{ user.username }}
+                    | Email: {{ user.email }}
+                    | Admin:{{ user.is_superuser }}
+                    | <a href="{% url 'logout' %}">Sign Out</a>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+</div>
+
+</body>
+</html>
